@@ -1,9 +1,34 @@
-language: c++
+#matrix:
+#  fast_finish: true
+#  include:
+#    # Android build
+#    - language: android
+#      os: linux
+#      sudo: required
+#      dist: precise
+#    # Linux Debug build
+#     - language: c++
+#       os: linux
+#       dist: trusty
+#       before_install: sudo apt-get install git cmake build-essential bison libx11-dev libxcb1-dev libwayland-dev libmirclient-dev
+#       script:
+#       - ./update_external_sources.sh
+#       - cmake -H. -Bdbuild -DCMAKE_BUILD_TYPE=Debug
+#       - cd dbuild
+#       - make
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-23.0.2
+    - android-23
+
+language: android
 os: linux
 dist: trusty
-before_install: sudo apt-get install git cmake build-essential bison libx11-dev libxcb1-dev libwayland-dev libmirclient-dev coreutils
 script:
-  - ./update_external_sources.sh
-  - cmake -H. -Bdbuild -DCMAKE_BUILD_TYPE=Debug
-  - cd dbuild
-  - make -j $(nproc)
+  - cd build-android
+  - ./update_external_sources_android.sh
+  - ./android-generate.sh
+  - ndk-build -j $(nproc)
