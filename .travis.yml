@@ -17,7 +17,7 @@ matrix:
     - language: android
       os: linux
       sudo: required
-      dist: trusty
+      dist: precise
       env: VULKAN_LVLBUILD_CONFIG=ANDROID ANDROID_TARGET=android-23 ANDROID_ABI=armeabi-v7a
     # Linux debug
     - os: linux
@@ -55,6 +55,6 @@ before_script:
 script:
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "NORMAL" ]]; then mkdir build && cd build; fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "NORMAL" ]]; then cmake -DCMAKE_BUILD_TYPE=${VULKAN_LVL_BUILD_TYPE:-Debug} ..; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "NORMAL" ]]; then make -j $(nproc); fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then pushd build-android; fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then ndk-build; fi
-  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then popd; fi
