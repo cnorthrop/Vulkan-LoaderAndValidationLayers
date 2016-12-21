@@ -18,7 +18,7 @@ matrix:
       os: linux
       sudo: required
       dist: precise
-      env: VULKAN_LVLBUILD_CONFIG=ANDROID ANDROID_TARGET=android-23 ANDROID_ABI=armeabi-v7a
+      env: VULKAN_LVL_BUILD_CONFIG=ANDROID
     # Linux debug
     #- os: linux
     #  compiler: gcc
