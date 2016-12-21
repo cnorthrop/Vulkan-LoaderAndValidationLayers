@@ -46,6 +46,10 @@ before_install:
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then export PATH=`pwd`/android-ndk-r13b:$PATH; fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then export JAVA_HOME="/usr/lib/jvm/java-8-oracle"; fi
 
+install:
+  # Make sure we can find the above Python packages
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PATH=$HOME/.local/bin:$PATH; fi
+
 before_script:
   # Linux and macOS
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "NORMAL" ]]; then ./update_external_sources.sh; fi
