@@ -17,11 +17,11 @@ matrix:
       dist: precise
       env: VULKAN_LVL_BUILD_CONFIG=ANDROID
     # Linux debug
-    #- os: linux
-    #  compiler: gcc
-    #  sudo: required
-    #  dist: trusty
-    #  env: VULKAN_LVL_BUILD_CONFIG=NORMAL VULKAN_LVL_BUILD_TYPE=Debug
+    - os: linux
+      compiler: gcc
+      sudo: required
+      dist: trusty
+      env: VULKAN_LVL_BUILD_CONFIG=NORMAL VULKAN_LVL_BUILD_TYPE=Debug
 
 android:
   components:
