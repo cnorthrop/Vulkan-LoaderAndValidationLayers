@@ -1,21 +1,30 @@
-#matrix:
-#  fast_finish: true
-#  include:
-#    # Android build
-#    - language: android
-#      os: linux
-#      sudo: required
-#      dist: precise
-#    # Linux Debug build
-#     - language: c++
-#       os: linux
-#       dist: trusty
-#       before_install: sudo apt-get install git cmake build-essential bison libx11-dev libxcb1-dev libwayland-dev libmirclient-dev
-#       script:
-#       - ./update_external_sources.sh
-#       - cmake -H. -Bdbuild -DCMAKE_BUILD_TYPE=Debug
-#       - cd dbuild
-#       - make
+# Build Configuration for Travis
+# https://travis-ci.org
+
+language:
+  - cpp
+
+python:
+  - "3.5"
+
+jdk: oraclejdk8
+
+matrix:
+  # Show final status immediately if a test fails.
+  fast_finish: true
+  include:
+    # Android
+    - language: android
+      os: linux
+      sudo: required
+      dist: trusty
+      env: VULKAN_LVLBUILD_CONFIG=ANDROID
+    # Linux debug
+    - os: linux
+      compiler: gcc
+      sudo: required
+      dist: trusty
+      env: VULKAN_LVL_BUILD_CONFIG=NORMAL VULKAN_LVL_BUILD_TYPE=Debug
 
 android:
   components:
@@ -24,11 +33,28 @@ android:
     - build-tools-23.0.2
     - android-23
 
-language: android
-os: linux
-dist: trusty
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install git cmake build-essential bison libx11-dev libxcb1-dev libwayland-dev libmirclient-dev; fi
+  # Install the Android NDK.
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then export ARCH=`uname -m`; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then wget http://dl.google.com/android/repository/android-ndk-r13b-linux-${ARCH}.zip; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then unzip -u -q android-ndk-r13b-linux-${ARCH}.zip; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then export ANDROID_NDK_HOME=`pwd`/android-ndk-r13b; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then export JAVA_HOME="/usr/lib/jvm/java-8-oracle"; fi
+
+before_script:
+  # Linux and macOS
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "NORMAL" ]]; then ./update_external_sources.sh; fi
+  # Android
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then pushd build-android; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then ./update_external_sources_android.sh; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then ./android-generate.sh; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then popd; fi
+
 script:
-  - cd build-android
-  - ./update_external_sources_android.sh
-  - ./android-generate.sh
-  - ndk-build -j $(nproc)
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "NORMAL" ]]; then mkdir build && cd build; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "NORMAL" ]]; then cmake -DCMAKE_BUILD_TYPE=${VULKAN_LVL_BUILD_TYPE:-Debug}; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then pushd build-android; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then ndk-build; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then popd; fi
