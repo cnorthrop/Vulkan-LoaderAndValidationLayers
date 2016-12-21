@@ -56,6 +56,7 @@ before_script:
   # Android
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then pushd build-android; fi
   #- if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then ./update_external_sources_android.sh; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then echo TRAVIS_PYTHON_VERSION == $TRAVIS_PYTHON_VERSION; fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then ./android-generate.sh; fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then popd; fi
 
