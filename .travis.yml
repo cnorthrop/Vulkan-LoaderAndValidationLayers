@@ -10,12 +10,30 @@ matrix:
   # Show final status immediately if a test fails.
   fast_finish: true
   include:
-    # Android
+    # Android armeabi-v7a
     - language: android
       os: linux
       sudo: required
       dist: precise
-      env: VULKAN_LVL_BUILD_CONFIG=ANDROID
+      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=armeabi-v7a
+    # Android arm64-v8a
+    - language: android
+      os: linux
+      sudo: required
+      dist: precise
+      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=arm64-v8a
+    # Android x86
+    - language: android
+      os: linux
+      sudo: required
+      dist: precise
+      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=x86
+    # Android x86_64
+    - language: android
+      os: linux
+      sudo: required
+      dist: precise
+      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=x86_64
     # Linux debug
     - os: linux
       compiler: gcc
@@ -65,4 +83,4 @@ script:
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "NORMAL" ]]; then cmake -DCMAKE_BUILD_TYPE=${VULKAN_LVL_BUILD_TYPE:-Debug} ..; fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "NORMAL" ]]; then make -j $(nproc); fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then pushd build-android; fi
-  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then ndk-build -j $(nproc); fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" ]]; then ndk-build -j $(nproc) APP_ABI=${ANDROID_TARGET_ABI}; fi
