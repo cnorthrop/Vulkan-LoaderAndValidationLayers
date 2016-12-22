@@ -74,7 +74,7 @@ before_install:
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" && "$TRAVIS_OS_NAME" == "linux" ]]; then export JAVA_HOME="/usr/lib/jvm/java-8-oracle"; fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" && "$TRAVIS_OS_NAME" == "osx" ]]; then export ARCH=`uname -m`; fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" && "$TRAVIS_OS_NAME" == "osx" ]]; then wget http://dl.google.com/android/repository/android-ndk-r13b-darwin-${ARCH}.zip; fi
-  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" && "$TRAVIS_OS_NAME" == "osx" ]]; then unzip -u -q android-ndk-r13b-linux-${ARCH}.zip; fi
+  - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" && "$TRAVIS_OS_NAME" == "osx" ]]; then unzip -u -q android-ndk-r13b-osx-${ARCH}.zip; fi
   - if [[ "$VULKAN_LVL_BUILD_CONFIG" == "ANDROID" && "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=`pwd`/android-ndk-r13b:$PATH; fi
 
 install:
