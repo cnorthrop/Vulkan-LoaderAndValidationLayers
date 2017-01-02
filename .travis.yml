@@ -11,40 +11,40 @@ matrix:
   fast_finish: true
   include:
     # Android armeabi-v7a
-#    - language: android
-#      os: linux
-#      sudo: required
-#      dist: precise
-#      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=armeabi-v7a
-#    # Android arm64-v8a
-#    - language: android
-#      os: linux
-#      sudo: required
-#      dist: precise
-#      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=arm64-v8a
-#    # Android x86
-#    - language: android
-#      os: linux
-#      sudo: required
-#      dist: precise
-#      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=x86
-#    # Android x86_64
-#    - language: android
-#      os: linux
-#      sudo: required
-#      dist: precise
-#      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=x86_64
-    # Android armeabi-v7a macOS
     - language: android
-      os: osx
+      os: linux
       sudo: required
+      dist: precise
       env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=armeabi-v7a
-    # Linux debug
-#    - os: linux
-#      compiler: gcc
+    # Android arm64-v8a
+    - language: android
+      os: linux
+      sudo: required
+      dist: precise
+      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=arm64-v8a
+    # Android x86
+    - language: android
+      os: linux
+      sudo: required
+      dist: precise
+      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=x86
+    # Android x86_64
+    - language: android
+      os: linux
+      sudo: required
+      dist: precise
+      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=x86_64
+    # Android armeabi-v7a macOS
+#    - language: android
+#      os: osx
 #      sudo: required
-#      dist: trusty
-#      env: VULKAN_LVL_BUILD_CONFIG=NORMAL VULKAN_LVL_BUILD_TYPE=Debug
+#      env: VULKAN_LVL_BUILD_CONFIG=ANDROID ANDROID_TARGET_ABI=armeabi-v7a
+    # Linux debug
+    - os: linux
+      compiler: gcc
+      sudo: required
+      dist: trusty
+      env: VULKAN_LVL_BUILD_CONFIG=NORMAL VULKAN_LVL_BUILD_TYPE=Debug
 
 android:
   components:
