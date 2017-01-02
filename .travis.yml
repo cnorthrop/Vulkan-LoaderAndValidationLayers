@@ -79,7 +79,7 @@ before_install:
 
 install:
   # Make sure we can find the above Python packages
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PATH=$HOME/.local/bin:$PATH; ei
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export PATH=$HOME/.local/bin:$PATH; fi
 
 before_script:
   # Linux and macOS
