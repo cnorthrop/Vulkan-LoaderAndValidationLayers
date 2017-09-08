@@ -46,6 +46,9 @@ before_install:
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then export JAVA_HOME="/usr/lib/jvm/java-8-oracle"; fi
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then export PATH="$ANDROID_NDK_HOME:$PATH"; fi
 
+  # Clear the cache contents if revisions have changed
+  - ./scripts/travis_check_cached_revisions.sh
+
 script:
   - if [[ "$VULKAN_BUILD_TARGET" == "LINUX" ]]; then ./update_external_sources.sh; fi
   - if [[ "$VULKAN_BUILD_TARGET" == "LINUX" ]]; then cmake -H. -Bdbuild -DCMAKE_BUILD_TYPE=Debug; fi
