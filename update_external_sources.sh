@@ -31,6 +31,7 @@ echo "SPIRV_HEADERS_REVISION=${SPIRV_HEADERS_REVISION}"
 
 BUILDDIR=${CURRENT_DIR}
 BASEDIR="$BUILDDIR/external"
+MAKE_COMMAND="make"
 
 function create_glslang () {
    rm -rf "${BASEDIR}"/glslang
@@ -85,7 +86,7 @@ function build_glslang () {
    mkdir -p build
    cd build
    cmake -D CMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install ..
-   make -j $CORE_COUNT
+   $MAKE_COMMAND -j $CORE_COUNT
    make install
 }
 
@@ -95,13 +96,14 @@ function build_spirv-tools () {
    mkdir -p build
    cd build
    cmake -D CMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install ..
-   make -j $CORE_COUNT
+   $MAKE_COMMAND -j $CORE_COUNT
 }
 
 INCLUDE_GLSLANG=false
 INCLUDE_SPIRV_TOOLS=false
 NO_SYNC=false
 NO_BUILD=false
+USE_CCACHE=false
 USE_IMPLICIT_COMPONENT_LIST=true
 
 # Parse options
@@ -132,6 +134,11 @@ do
       NO_BUILD=true
       echo "Skipping build ($option)"
       ;;
+      # option to prepend ccache to make
+      --ccache)
+      USE_CCACHE=true
+      echo "Enabling ccache ($option)"
+      ;;
       *)
       echo "Unrecognized option: $option"
       echo "Usage: update_external_sources.sh [options]"
@@ -140,6 +147,7 @@ do
       echo "    -s | --spirv-tools  # enable spirv-tools component"
       echo "    --no-sync           # skip sync from git"
       echo "    --no-build          # skip build"
+      echo "    --ccache            # prepend ccache to build"
       echo "  If any component enables are provided, only those components are enabled."
       echo "  If no component enables are provided, all components are enabled."
       echo "  Sync uses git to pull a specific revision."
@@ -154,6 +162,11 @@ if [ ${USE_IMPLICIT_COMPONENT_LIST} == "true" ]; then
   echo "Building glslang, spirv-tools"
   INCLUDE_GLSLANG=true
   INCLUDE_SPIRV_TOOLS=true
+fi
+
+if [ ${USE_CCACHE} == "true" ]; then
+  echo "Enabling ccache with make"
+  MAKE_COMMAND="ccache make"
 fi
 
 if [ ${INCLUDE_GLSLANG} == "true" ]; then
