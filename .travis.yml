@@ -14,12 +14,12 @@ matrix:
       compiler: gcc
       env: VULKAN_BUILD_TARGET=ANDROID ANDROID_TARGET=android-23 ANDROID_ABI=armeabi-v7a
 
-android:
-  components:
-    - tools
-    - platform-tools
-    - build-tools-23.0.2
-    - android-23
+  #android:
+  #components:
+  #  - tools
+  #  - platform-tools
+  #  - build-tools-23.0.2
+  #  - android-23
 
 cache: ccache
 
@@ -36,18 +36,19 @@ before_install:
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then export PATH="$ANDROID_NDK_HOME:$PATH"; fi
 
   # Clear the toolchain contents if revisions have changed
-  - ./scripts/check_toolchain_revisions.sh
+  #- ./scripts/check_toolchain_revisions.sh
+  - export core_count=$(nproc || echo 4) && echo core_count = $core_count
 
 script:
   - if [[ "$VULKAN_BUILD_TARGET" == "LINUX" ]]; then ./update_external_sources.sh; fi
   - if [[ "$VULKAN_BUILD_TARGET" == "LINUX" ]]; then cmake -H. -Bdbuild -DCMAKE_BUILD_TYPE=Debug; fi
-  - if [[ "$VULKAN_BUILD_TARGET" == "LINUX" ]]; then make -C dbuild; fi
+  - if [[ "$VULKAN_BUILD_TARGET" == "LINUX" ]]; then make -C dbuild -j $core_count; fi
   - if [[ "$VULKAN_BUILD_TARGET" == "LINUX" ]]; then LD_LIBRARY_PATH=dbuild/loader:$LD_LIBRARY_PATH VK_LAYER_PATH=dbuild/layers VK_ICD_FILENAMES=dbuild/icd/VkICD_mock_icd.json dbuild/tests/vk_layer_validation_tests; fi
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then pushd build-android; fi
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then ./update_external_sources_android.sh --abi $ANDROID_ABI --no-build; fi
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then ./android-generate.sh; fi
-  - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then echo core_count = $(nproc); fi
-  - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then USE_CCACHE=1 NDK_CCACHE=ccache ndk-build APP_ABI=$ANDROID_ABI -j $(nproc || echo 4); fi
+  - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then echo core_count = $core_count; fi
+  - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then USE_CCACHE=1 NDK_CCACHE=ccache ndk-build APP_ABI=$ANDROID_ABI -j $core_count; fi
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then popd; fi
 
 notifications:
