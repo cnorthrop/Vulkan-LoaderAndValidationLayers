@@ -46,7 +46,8 @@ script:
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then pushd build-android; fi
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then ./update_external_sources_android.sh --abi $ANDROID_ABI --no-build; fi
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then ./android-generate.sh; fi
-  - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then USE_CCACHE=1 NDK_CCACHE=ccache ndk-build APP_ABI=$ANDROID_ABI; fi
+  - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then echo core_count = $(nproc); fi
+  - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then USE_CCACHE=1 NDK_CCACHE=ccache ndk-build APP_ABI=$ANDROID_ABI -j $(nproc || echo 4); fi
   - if [[ "$VULKAN_BUILD_TARGET" == "ANDROID" ]]; then popd; fi
 
 notifications:
