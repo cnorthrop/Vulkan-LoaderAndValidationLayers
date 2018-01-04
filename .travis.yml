@@ -23,7 +23,7 @@ matrix:
     - os: linux
       language: android
       cache:
-        directories: $HOME/Vulkan-LoaderAndValidationLayers/build-android/third_party
+        directories: $TRAVIS_BUILD_DIR/Vulkan-LoaderAndValidationLayers/build-android/third_party
       env: VULKAN_BUILD_TARGET=ANDROID_GRADLE ANDROID_TARGET=android-23 ANDROID_ABI=armeabi-v7a
     # Linux GCC debug build.
     - os: linux
