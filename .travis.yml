@@ -12,27 +12,32 @@ matrix:
     # Android build.
     - os: linux
       compiler: gcc
+      cache: ccache
       env: VULKAN_BUILD_TARGET=ANDROID ANDROID_TARGET=android-23 ANDROID_ABI=armeabi-v7a
     # Android 64-bit build.
     - os: linux
       compiler: gcc
+      cache: ccache
       env: VULKAN_BUILD_TARGET=ANDROID ANDROID_TARGET=android-23 ANDROID_ABI=arm64-v8a
     # Android gradle build.
     - os: linux
       language: android
+      cache:
+        directories: build-android/third_party
       env: VULKAN_BUILD_TARGET=ANDROID_GRADLE ANDROID_TARGET=android-23 ANDROID_ABI=armeabi-v7a
     # Linux GCC debug build.
     - os: linux
       compiler: gcc
+      cache: ccache
       env: VULKAN_BUILD_TARGET=LINUX
     # Linux clang debug build.
     - os: linux
       compiler: clang
+      cache: ccache
       env: VULKAN_BUILD_TARGET=LINUX
     # Check for proper clang formatting in the pull request.
     - env: CHECK_FORMAT=ON
 
-cache: ccache
 
 android:
     components:
@@ -43,9 +48,6 @@ android:
     # Note that the tools section appears twice on purpose as it’s required to get the newest Android SDK tools.
     # https://docs.travis-ci.com/user/languages/android/
     - tools
-    cache:
-      directories:
-      - build-android/third_party
 
 # Use set -e so that the build fails when a command fails.
 # The default action for Travis-CI is to continue running even if a command fails.
@@ -115,7 +117,8 @@ script:
       echo yes | $ANDROID_HOME/tools/bin/sdkmanager "cmake;3.6.4111459"
 
       pushd build-android
-      USE_CCACHE=1 NDK_CCACHE=ccache ./update_external_sources_android.sh --abi $ANDROID_ABI
+      #USE_CCACHE=1 NDK_CCACHE=ccache ./update_external_sources_android.sh --abi $ANDROID_ABI
+      ./update_external_sources_android.sh --abi $ANDROID_ABI
       ./android-generate.sh
       (cd cmake/test; ./gradlew clean assembleDebug)
       popd
